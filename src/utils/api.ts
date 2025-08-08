@@ -1,8 +1,10 @@
-// src/utils/api.ts
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL 
+    ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/api` 
+    : 'http://localhost:5000/api',
+
 });
 
 // Attach token to every request
@@ -20,7 +22,8 @@ export const timesheetAPI = {
   createTimesheet: (data: any) => api.post('/timesheets', data),
   updateTimesheet: (id: string, data: any) => api.put(`/timesheets/${id}`, data),
   deleteTimesheet: (id: string) => api.delete(`/timesheets/${id}`),
-  exportCSV: () => api.get('/timesheets/export/csv', { responseType: 'blob' }),
+  downloadCSV: () => api.get('/timesheets/export/csv', { responseType: 'blob' }),
+  downloadPDF: () => api.get('/timesheets/download-pdf', { responseType: 'blob' }),
 };
 
 // Admin APIs
@@ -51,7 +54,3 @@ export const downloadBlob = (blob: Blob, filename: string) => {
   window.URL.revokeObjectURL(url);
   document.body.removeChild(a);
 };
-
-downloadPDF: () => axiosInstance.get('/timesheets/download-pdf', { responseType: 'blob' })
-
-
